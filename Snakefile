@@ -21,8 +21,8 @@ localrules: all, genome_faidx, genome_dict
 
 
 
-### Get a dict named config from Snakemake-Example/config.yaml
-configfile: "assignments/008-hard-filter-gatk-vcfs/config.yaml"
+### Get a dict named config from crct_snake_proj/config.yaml
+configfile: "config.yaml"
 
 
 
@@ -58,14 +58,13 @@ def get_fastqs(wildcards):
 # to the wildcard value)
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
-    return r"-R '@RG\tID:{sample}_{sample_id}_{library}_{flowcell}_{lane}_{barcode}\tSM:{sample_id}\tPL:{platform}\tLB:{library}\tPU:{flowcell}.{lane}.{barcode}'".format(
+    return r"-R '@RG\tID:{sample}_{sample_id}_{library}_{flowcell}_{lane}\tSM:{sample_id}\tPL:{platform}\tLB:{library}\tPU:{flowcell}.{lane}.{library}'".format(
         sample=wildcards.sample,
         sample_id=sample_table.loc[(wildcards.sample), "sample_id"],
         platform=sample_table.loc[(wildcards.sample), "platform"],
         library=sample_table.loc[(wildcards.sample), "library"],
         flowcell=sample_table.loc[(wildcards.sample), "flowcell"],
         lane=sample_table.loc[(wildcards.sample), "lane"],
-        barcode=sample_table.loc[(wildcards.sample), "barcode"],
     )
 
 
