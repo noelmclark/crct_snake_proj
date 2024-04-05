@@ -1,22 +1,52 @@
 
 # path to the genome (not used in workflow, but we could have...)
-genome_path: "data/genome/genome.fasta"
+genome_path: "data/genome/OmykA.fasta"
 
 # path to file with information about samples
-sample_info: "Snakemake-Example/sample-info.tsv"
+sample_info: "sample-info.tsv"
 
 # Put the list of chromosomes we want to do here
+# choromosomes from the ncbi OmykA 1.1 reference genome https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_013265735.2/
 chromos: 
-  - "NC_037122.1f5t9"
-  - "NC_037123.1f10t14"
-  - "NC_037124.1f8t16"
-  - "NC_037125.1f20t24"
+  - "NC_048565.1"
+  - "NC_048566.1"
+  - "NC_048567.1"
+  - "NC_048568.1"
+  - "NC_048569.1"
+  - "NC_048570.1"
+  - "NC_048571.1"
+  - "NC_048572.1"
+  - "NC_048573.1"
+  - "NC_048574.1"
+  - "NC_048575.1"
+  - "NC_048576.1"
+  - "NC_048577.1"
+  - "NC_048578.1"
+  - "NC_048579.1"
+  - "NC_048580.1"
+  - "NC_048581.1"
+  - "NC_048582.1"
+  - "NC_048583.1"
+  - "NC_048584.1"
+  - "NC_048585.1"
+  - "NC_048586.1"
+  - "NC_048587.1"
+  - "NC_048588.1"
+  - "NC_048589.1"
+  - "NC_048590.1"
+  - "NC_048591.1"
+  - "NC_048592.1"
+  - "NC_050570.1"
+  - "NC_050571.1"
+  - "NC_050572.1"
 
 # parameters to be used for different rules/programs
+# fastp adapter 1 and 2 are for Novogene Novaseq X listed in data report
+# variant hard filtering based on gatk best practices
 params:
   fastp:
-    adapter_sequence1: "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
-    adapter_sequence2: "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+    adapter_sequence1: "ATCGGAAGAGCACACGTCTGAACTCCAGTCACGGATGACTATCTCGTATGCCGTCTTCTGCTTG"
+    adapter_sequence2: "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
     other_options:
       - "--detect_adapter_for_pe"
       - "--cut_right" 
