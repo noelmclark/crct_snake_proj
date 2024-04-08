@@ -22,7 +22,7 @@ localrules: all, genome_faidx, genome_dict
 
 
 ### Get a dict named config from crct_snake_proj/config.yaml
-configfile: "config.yaml"
+configfile: "crct_snake_proj/config.yaml"
 
 
 
@@ -42,7 +42,7 @@ SAMPLES=sample_table["sample"].unique().tolist()
 
 # Create a new SAMPLESID list from the sample_table using the same
 # pandas syntax as for SAMPLES
-SAMPLEID=sample_table["sampleid"].unique().tolist()
+SAMPLEID=sample_table["sample_id"].unique().tolist()
 
 # Define CHROMOS from the values in the config file
 CHROMOS=config["chromos"]
@@ -53,8 +53,8 @@ CHROMOS=config["chromos"]
 # define a function to get the fastq path from the sample_table. This
 # returns it as a dict, so we need to unpack it in the rule
 def get_fastqs(wildcards):
-  fq1=sample_table.loc[ wildcards.sample, "fq1" ]
-  fq2=sample_table.loc[ wildcards.sample, "fq2" ]
+  fq1=sample_table.loc[ wildcards.sample_id, "fq1" ]
+  fq2=sample_table.loc[ wildcards.sample_id, "fq2" ]
   return {"r1": fq1, "r2": fq2 }
 
 # define a function for getting the read group information
@@ -133,15 +133,15 @@ rule trim_reads:
     unpack(get_fastqs) # unpack creates named inputs from the dict that
                        # get_fastqs returns
   output:
-    r1="results/trimmed/{sample}_R1.fastq.gz",
-    r2="results/trimmed/{sample}_R2.fastq.gz",
-    html="results/qc/fastp/{sample}.html",
-    json="results/qc/fastp/{sample}.json"
+    r1="results/trimmed/{sample}_{sample_id}_R1.fastq.gz",
+    r2="results/trimmed/{sample}_{sample_id}_R2.fastq.gz",
+    html="results/qc/fastp/{sample}_{sample_id}.html",
+    json="results/qc/fastp/{sample}_{sample_id}.json"
   conda:
     "envs/fastp.yaml"
   log:
-    out="results/logs/trim_reads/{sample}.log",
-    err="results/logs/trim_reads/{sample}.err",
+    out="results/logs/trim_reads/{sample}_{sample_id}.log",
+    err="results/logs/trim_reads/{sample}_{sample_id}.err",
   params:
     as1=config["params"]["fastp"]["adapter_sequence1"],
     as2=config["params"]["fastp"]["adapter_sequence2"],
@@ -158,16 +158,16 @@ rule trim_reads:
 
 rule map_reads:
   input:
-    r1="results/trimmed/{sample}_R1.fastq.gz",
-    r2="results/trimmed/{sample}_R2.fastq.gz",
+    r1="results/trimmed/{sample}_{sample_id}_R1.fastq.gz",
+    r2="results/trimmed/{sample}_{sample_id}_R2.fastq.gz",
     genome="data/genome/genome.fasta",
     idx=multiext("data/genome/genome.fasta", ".0123", ".amb", ".ann", ".bwt.2bit.64", ".pac")
   output:
-    "results/bam/{sample}.bam"
+    "results/bam/{sample}_{sample_id}.bam"
   conda:
     "envs/bwa2sam.yaml"
   log:
-    "results/logs/map_reads/{sample}.log"
+    "results/logs/map_reads/{sample}_{sample_id}.log"
   threads: 2
   resources:
     mem_mb=7480,
@@ -178,6 +178,22 @@ rule map_reads:
     " (bwa-mem2 mem -t {threads} {params.RG} {input.genome} {input.r1} {input.r2} | "
     " samtools view -u | "
     " samtools sort - > {output}) 2> {log} "
+
+
+
+
+# possible rule for merging multiple bams together 
+rule merge_bams:
+  input:
+    expand("results/bam/{{sample}}_{sid}.bam", sid=SAMPLEID)
+  output:
+    "results/bam/{sample}.bam"
+  conda:
+    "envs/bwa2sam.yaml"
+  log:
+    "results/logs/merge_bams/{sample}.log"
+  shell:
+    "samtools merge {output} {input} 2> {log}"
 
 
 
