@@ -40,10 +40,6 @@ sample_table=pd.read_table(config["sample_info"], dtype="str").set_index(
 # pandas syntax
 SAMPLES=sample_table["sample"].unique().tolist()
 
-# Create a new SAMPLESID list from the sample_table using the same
-# pandas syntax as for SAMPLES
-SAMPLEID=sample_table["sample_id"].unique().tolist()
-
 # Define CHROMOS from the values in the config file
 CHROMOS=config["chromos"]
 
@@ -52,10 +48,15 @@ CHROMOS=config["chromos"]
 ### Input Functins that use the tabular sample_info
 # define a function to get the fastq path from the sample_table. This
 # returns it as a dict, so we need to unpack it in the rule
-def get_fastqs(wildcards):
-  fq1=sample_table.loc[ wildcards.sample_id, "fq1" ]
-  fq2=sample_table.loc[ wildcards.sample_id, "fq2" ]
-  return {"r1": fq1, "r2": fq2 }
+# This function groups fastqs by sample and unit so we can account for cases
+# where there are more than 2 fastq files per sample. 
+# Also the if function deals with if we only have one fastq file for a sample. 
+def get_fastq(wildcards):
+    """Get fastq files of given sample-unit."""
+    fastqs = sample_table.loc[(wildcards.sample, wildcards.unit), ["fq1", "fq2"]].dropna()
+    if len(fastqs) == 2:
+        return {"r1": fastqs.fq1, "r2": fastqs.fq2}
+    return {"r1": fastqs.fq1}
 
 # define a function for getting the read group information
 # from the sample table for each particular sample (according
@@ -71,7 +72,13 @@ def get_read_group(wildcards):
         lane=sample_table.loc[(wildcards.sample), "lane"],
     )
 
-
+# define function to get all the bam files for different units of same sample
+def get_all_bams_of_common_sample(wildcards):
+    s=sample_table.loc[(sample_table["sample"] == wildcards.sample)]
+    return(expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
+        sample = s["sample"].tolist(),
+        unit = s["unit"].tolist(),
+    ))
 
 
 ### Specify rule "all"
@@ -133,15 +140,15 @@ rule trim_reads:
     unpack(get_fastqs) # unpack creates named inputs from the dict that
                        # get_fastqs returns
   output:
-    r1="results/trimmed/{sample}_{sample_id}_R1.fastq.gz",
-    r2="results/trimmed/{sample}_{sample_id}_R2.fastq.gz",
-    html="results/qc/fastp/{sample}_{sample_id}.html",
-    json="results/qc/fastp/{sample}_{sample_id}.json"
+    r1="results/trimmed/{sample}---{unit}_R1.fastq.gz",
+    r2="results/trimmed/{sample}---{unit}_R2.fastq.gz",
+    html="results/qc/fastp/{sample}---{unit}.html",
+    json="results/qc/fastp/{sample}---{unit}.json"
   conda:
     "envs/fastp.yaml"
   log:
-    out="results/logs/trim_reads/{sample}_{sample_id}.log",
-    err="results/logs/trim_reads/{sample}_{sample_id}.err",
+    out="results/logs/trim_reads/{sample}---{unit}.log",
+    err="results/logs/trim_reads/{sample}---{unit}.err",
   params:
     as1=config["params"]["fastp"]["adapter_sequence1"],
     as2=config["params"]["fastp"]["adapter_sequence2"],
@@ -158,16 +165,16 @@ rule trim_reads:
 
 rule map_reads:
   input:
-    r1="results/trimmed/{sample}_{sample_id}_R1.fastq.gz",
-    r2="results/trimmed/{sample}_{sample_id}_R2.fastq.gz",
+    r1="results/trimmed/{sample}---{unit}_R1.fastq.gz",
+    r2="results/trimmed/{sample}---{unit}_R2.fastq.gz",
     genome="data/genome/genome.fasta",
     idx=multiext("data/genome/genome.fasta", ".0123", ".amb", ".ann", ".bwt.2bit.64", ".pac")
   output:
-    "results/bam/{sample}_{sample_id}.bam"
+    "results/mapped/{sample}---{unit}.sorted.bam"
   conda:
     "envs/bwa2sam.yaml"
   log:
-    "results/logs/map_reads/{sample}_{sample_id}.log"
+    "results/logs/map_reads/{sample}---{unit}.log"
   threads: 2
   resources:
     mem_mb=7480,
@@ -181,26 +188,9 @@ rule map_reads:
 
 
 
-
-# possible rule for merging multiple bams together 
-rule merge_bams:
-  input:
-    expand("results/bam/{{sample}}_{sid}.bam", sid=SAMPLEID)
-  output:
-    "results/bam/{sample}.bam"
-  conda:
-    "envs/bwa2sam.yaml"
-  log:
-    "results/logs/merge_bams/{sample}.log"
-  shell:
-    "samtools merge {output} {input} 2> {log}"
-
-
-
-
 rule mark_duplicates:
   input:
-    "results/bam/{sample}.bam"
+    get_all_bams_of_common_sample
   output:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
