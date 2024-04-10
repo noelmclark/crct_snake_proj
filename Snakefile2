@@ -22,14 +22,14 @@ localrules: all, genome_faidx, genome_dict
 
 
 ### Get a dict named config from crct_snake_proj/config.yaml
-configfile: "crct_snake_proj/config.yaml"
+configfile: "config.yaml"
 
 
 
 
 ### Get the sample info table read into a pandas data frame
 sample_table=pd.read_table(config["sample_info"], dtype="str").set_index(
-    "sample", drop=False
+    ["sample", "unit"], drop=False
 )
 
 
@@ -51,7 +51,7 @@ CHROMOS=config["chromos"]
 # This function groups fastqs by sample and unit so we can account for cases
 # where there are more than 2 fastq files per sample. 
 # Also the if function deals with if we only have one fastq file for a sample. 
-def get_fastq(wildcards):
+def get_fastqs(wildcards):
     """Get fastq files of given sample-unit."""
     fastqs = sample_table.loc[(wildcards.sample, wildcards.unit), ["fq1", "fq2"]].dropna()
     if len(fastqs) == 2:
@@ -137,8 +137,8 @@ rule bwa_index:
 
 rule trim_reads:
   input:
-    unpack(get_fastqs) # unpack creates named inputs from the dict that
-                       # get_fastqs returns
+    unpack(get_fastqs), # unpack creates named inputs from the dict that
+                        # get_fastqs returns
   output:
     r1="results/trimmed/{sample}---{unit}_R1.fastq.gz",
     r2="results/trimmed/{sample}---{unit}_R2.fastq.gz",
@@ -160,15 +160,15 @@ rule trim_reads:
     "  --adapter_sequence={params.as1}        "
     "  --adapter_sequence_r2={params.as2}     "
     "  {params.parm} > {log.out} 2> {log.err} "
-    
+
 
 
 rule map_reads:
   input:
     r1="results/trimmed/{sample}---{unit}_R1.fastq.gz",
     r2="results/trimmed/{sample}---{unit}_R2.fastq.gz",
-    genome="data/genome/genome.fasta",
-    idx=multiext("data/genome/genome.fasta", ".0123", ".amb", ".ann", ".bwt.2bit.64", ".pac")
+    genome="data/genome/OmykA.fasta",
+    idx=multiext("data/genome/OmykA.fasta", ".0123", ".amb", ".ann", ".bwt.2bit.64", ".pac")
   output:
     "results/mapped/{sample}---{unit}.sorted.bam"
   conda:
@@ -213,9 +213,9 @@ rule make_gvcfs_by_chromo:
   input:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
-    ref="data/genome/genome.fasta",
-    idx="data/genome/genome.dict",
-    fai="data/genome/genome.fasta.fai"
+    ref="data/genome/OmykA.fasta",
+    idx="data/genome/OmykA.dict",
+    fai="data/genome/OmykA.fasta.fai"
   output:
     gvcf="results/gvcf/{chromo}/{sample}.g.vcf.gz",
     idx="results/gvcf/{chromo}/{sample}.g.vcf.gz.tbi",
@@ -262,9 +262,9 @@ rule import_genomics_db_by_chromo:
 rule vcf_from_gdb_by_chromo:
   input:
     gdb="results/genomics_db/{chromo}",
-    ref="data/genome/genome.fasta",
-    fai="data/genome/genome.fasta.fai",
-    idx="data/genome/genome.dict",
+    ref="data/genome/OmykA.fasta",
+    fai="data/genome/OmykA.fasta.fai",
+    idx="data/genome/OmykA.dict",
   output:
     vcf="results/chromo_vcfs/{chromo}.vcf.gz",
     idx="results/chromo_vcfs/{chromo}.vcf.gz.tbi",

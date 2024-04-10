@@ -1,9 +1,9 @@
 
 # path to the genome (not used in workflow, but we could have...)
-genome_path: "crct_snake_proj/data/genome/OmykA.fasta"
+genome_path: "data/genome/OmykA.fasta"
 
 # path to file with information about samples
-sample_info: "crct_snake_proj/sample-info.tsv"
+sample_info: "sample-info.tsv"
 
 # Put the list of chromosomes we want to do here
 # choromosomes from the ncbi OmykA 1.1 reference genome https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_013265735.2/
