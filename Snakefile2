@@ -88,7 +88,7 @@ def get_all_bams_of_common_sample(wildcards):
 rule all:
   input: 
     "results/vcf-stats/all.vcf.stats",
-    expand("results/psmc-consensus-sequence/{s}.fq.gz", s=SAMPLES)
+    expand("results/psmc-plot/{s}", s=SAMPLES)
 
 
 
@@ -440,3 +440,64 @@ rule psmc_consensus_sequence:
   shell:
     "samtools mpileup -C50 -uf {input.ref} {input.bam} | bcftools view -c - | " 
     "vcfutils.pl vcf2fq -d 6 -D 36 | gzip > {output} 2> {log}"
+
+
+# following rules are to run PSMC
+# based on lh3 documentation at: https://github.com/lh3/psmc
+
+# rule to create psmcfa file
+rule psmcfa:
+  input:
+    "results/psmc-consensus-sequence/{sample}.fq.gz"
+  output:
+    "results/psmcfa/{sample}.psmcfa"
+  conda:
+    "envs/psmc.yaml"
+  log:
+    "results/psmcfa/{sample}.log"
+  shell:
+    "fq2psmcfa -q20 {input} > {output} 2> {log}"
+
+
+
+# rule to run psmc
+rule run_psmc:
+  input:
+    "results/psmcfa/{sample}.psmcfa"
+  output:
+    "results/run-psmc/{sample}.psmc"
+  conda:
+    "envs/psmc.yaml"
+  log:
+    "results/run-psmc/{sample}.log"
+  shell:
+    "psmc -N25 -t15 -r5 -p "4+25*2+4+6" -o {output} {input} 2> {log}"
+
+
+
+# rule to run psmc2history & history2ms to generate the ms
+# command line that simulates the history inferred by PSMC
+rule psmc2history2ms:
+  input:
+    "results/run-psmc/{sample}.psmc"
+  output:
+    "results/psmc2history2ms/{sample}-ms-cmd.sh"
+  conda:
+    "envs/psmc.yaml"
+  log:
+    "results/psmc2history2ms/{sample}.log"
+  shell:
+    "psmc2history.pl {input} | history2ms.pl > {output} 2> {log}"
+
+# rule to plot psmc to visualize result
+rule psmc_plot:
+  input:
+    "results/run-psmc/{sample}.psmc"
+  output:
+    "results/psmc-plot/{sample}"
+  conda:
+    "envs/psmc.yaml"
+  log:
+    "results/psmc-plot/{sample}.log"
+  shell:
+    "psmc_plot.pl {output} {input}"
