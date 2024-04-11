@@ -421,3 +421,22 @@ rule vcf_stats:
     "results/vcf-stats/all.log"
   shell:
     "bcftools stats {input} > {output} 2> {log}"
+
+
+
+# rule to get a consensus fastq sequence file for PSMC
+# option -d sets and minimum read depth and -D sets the maximum 
+# It is recommended to set -d to a third of the average depth and -D to twice
+rule psmc_consensus_sequence
+  input:
+    bam="results/mkdup/{sample}.bam",
+    ref="data/genome/OmykA.fasta",
+  output:
+    "results/psmc-consensus-sequence/{sample}.fq.gz"
+  conda:
+    "envs/sambcftools.yaml"
+  log:
+    "results/psmc-consensus-sequence/all.log"
+  shell:
+    "samtools mpileup -C50 -uf {input.ref} {input.bam} | bcftools view -c - | " 
+    "vcfutils.pl vcf2fq -d 6 -D 36 | gzip > {output} 2> {log}"
