@@ -471,7 +471,7 @@ rule run_psmc:
   log:
     "results/run-psmc/{sample}.log"
   shell:
-    "psmc -N25 -t15 -r5 -p "4+25*2+4+6" -o {output} {input} 2> {log}"
+    "psmc -N25 -t15 -r5 -p '4+25*2+4+6' -o {output} {input} 2> {log}"
 
 
 
