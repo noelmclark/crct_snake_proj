@@ -490,6 +490,8 @@ rule psmc2history2ms:
     "psmc2history.pl {input} | history2ms.pl > {output} 2> {log}"
 
 # rule to plot psmc to visualize result
+# -u [per-generation mutation rate]
+# -g [generation time in years] from https://doi.org/10.1371/journal.pgen.1010918
 rule psmc_plot:
   input:
     "results/run-psmc/{sample}.psmc"
@@ -500,4 +502,4 @@ rule psmc_plot:
   log:
     "results/psmc-plot/{sample}.log"
   shell:
-    "psmc_plot.pl {output} {input}"
+    "psmc_plot.pl -u 8.0e-09 -g 3 {output} {input}"
