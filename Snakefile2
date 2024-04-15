@@ -175,10 +175,10 @@ rule map_reads:
     "envs/bwa2sam.yaml"
   log:
     "results/logs/map_reads/{sample}---{unit}.log"
-  threads: 2
+  threads: 4
   resources:
-    mem_mb=7480,
-    time="01:00:00"
+    mem_mb=19200,
+    time="23:59:59"
   params:
     RG=get_read_group
   shell:
