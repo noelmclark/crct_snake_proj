@@ -17,7 +17,7 @@ cluster-generic-cancel-nargs: 400
 # warning, time here is very small.  It works for the small
 # example data set, but should be increased for production jobs
 default-resources:
-  - time="00:30:00"
+  - time="12:00:00"
   - mem_mb=3740
   - tmpdir="results/snake-tmp"
 restart-times: 0
