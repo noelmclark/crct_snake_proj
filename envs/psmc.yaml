@@ -3,4 +3,4 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - psmc ==0.6.5-2
+  - psmc ==0.6.5
