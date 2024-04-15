@@ -126,6 +126,8 @@ rule bwa_index:
     multiext("data/genome/OmykA.fasta", ".0123", ".amb", ".ann", ".bwt.2bit.64", ".pac"),
   conda:
     "envs/bwa2sam.yaml"
+  resources:
+    mem_mb=36900,
   log:
     out="results/logs/bwa_index/bwa_index.log",
     err="results/logs/bwa_index/bwa_index.err"
