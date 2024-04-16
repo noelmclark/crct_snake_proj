@@ -127,7 +127,8 @@ rule bwa_index:
   conda:
     "envs/bwa2sam.yaml"
   resources:
-    mem_mb=37900,
+    mem_mb=75800,
+    time="12:00:00"
   log:
     out="results/logs/bwa_index/bwa_index.log",
     err="results/logs/bwa_index/bwa_index.err"
@@ -152,7 +153,8 @@ rule trim_reads:
     out="results/logs/trim_reads/{sample}---{unit}.log",
     err="results/logs/trim_reads/{sample}---{unit}.err",
   resources:
-    mem_mb=3740
+    mem_mb=7480
+    time="06:00:00"
   params:
     as1=config["params"]["fastp"]["adapter_sequence1"],
     as2=config["params"]["fastp"]["adapter_sequence2"],
