@@ -153,7 +153,7 @@ rule trim_reads:
     out="results/logs/trim_reads/{sample}---{unit}.log",
     err="results/logs/trim_reads/{sample}---{unit}.err",
   resources:
-    mem_mb=7480
+    mem_mb=7480,
     time="06:00:00"
   params:
     as1=config["params"]["fastp"]["adapter_sequence1"],
