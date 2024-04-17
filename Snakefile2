@@ -64,7 +64,7 @@ def get_fastqs(wildcards):
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
     return r"-R '@RG\tID:{sample}_{sample_id}_{library}_{flowcell}_{lane}\tSM:{sample_id}\tPL:{platform}\tLB:{library}\tPU:{flowcell}.{lane}.{library}'".format(
-        sample=wildcards.sample,
+        sample=sample_table.loc[(wildcards.sample), "sample"],
         sample_id=sample_table.loc[(wildcards.sample), "sample_id"],
         platform=sample_table.loc[(wildcards.sample), "platform"],
         library=sample_table.loc[(wildcards.sample), "library"],
