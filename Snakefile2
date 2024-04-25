@@ -208,7 +208,7 @@ rule mark_duplicates:
   shell:
     " gatk MarkDuplicates  "
     "  --CREATE_INDEX "
-    "  -I {input.bam}, "
+    "  -I {input.bam} "
     "  -O {output.bam} "
     "  -M {output.metrics} > {log} 2>&1 "
 
