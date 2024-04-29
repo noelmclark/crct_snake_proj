@@ -207,13 +207,13 @@ rule mark_duplicates:
     "results/logs/mark_duplicates/{sample}.log"
   #params:
   #  extra=config["params"]["picard"]["MarkDuplicates"],
-#  wrapper:
-#    "v3.9.0/bio/picard/markduplicates"
+  #wrapper:
+  #  "v3.9.0/bio/picard/markduplicates"
   shell:
     "if isinstance({input.bams}, str): \
     "   bams = [{input.bams}] \ "
     " bams = list(map("--INPUT {}".format, bams)); "
-#    " BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
+   #" BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
     " gatk MarkDuplicates  "
     "  --CREATE_INDEX "
     "  {bams} "
