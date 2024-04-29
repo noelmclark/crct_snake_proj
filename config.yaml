@@ -69,6 +69,6 @@ params:
         - ' -filter "MQ < 40.0" --filter-name "MQ40" '
         - ' -filter "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" '
         - ' -filter "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" '
-    picard:
-      MarkDuplicates: " --CREATE_INDEX "
+  picard:
+    MarkDuplicates: " --CREATE_INDEX "
     
