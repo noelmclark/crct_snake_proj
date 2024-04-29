@@ -4,4 +4,3 @@ channels:
   - defaults
 dependencies:
   - gatk4 ==4.2.6.1
-  - snakemake-wrapper-utils ==0.1.3
