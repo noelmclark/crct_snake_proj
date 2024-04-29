@@ -201,8 +201,8 @@ rule mark_duplicates:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
     metrics="results/qc/mkdup_metrics/{sample}.metrics"
-  conda:
-    "envs/picard.yaml"
+  #conda:
+  #  "envs/picard.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
   params:
