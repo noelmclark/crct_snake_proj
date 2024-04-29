@@ -196,7 +196,7 @@ rule map_reads:
 
 rule mark_duplicates:
   input:
-    get_all_bams_of_common_sample
+    bams=get_all_bams_of_common_sample
   output:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
