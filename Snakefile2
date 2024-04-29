@@ -205,8 +205,8 @@ rule mark_duplicates:
     "envs/picard.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
-  params:
-    extra=config["params"]["picard"]["MarkDuplicates"],
+  #params:
+  #  extra=config["params"]["picard"]["MarkDuplicates"],
 #  wrapper:
 #    "v3.9.0/bio/picard/markduplicates"
 #  shell:
