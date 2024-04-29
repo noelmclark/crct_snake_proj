@@ -202,7 +202,7 @@ rule mark_duplicates:
     bai="results/mkdup/{sample}.bai",
     metrics="results/qc/mkdup_metrics/{sample}.metrics"
   conda:
-    "envs/gatk.yaml"
+    "envs/picard.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
   params:
