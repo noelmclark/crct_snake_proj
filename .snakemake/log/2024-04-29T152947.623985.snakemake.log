@@ -1,0 +1,116 @@
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Using shell: /bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+mark_duplicates                4
+psmc_consensus_sequence        4
+psmc_plot                      4
+psmcfa                         4
+run_psmc                       4
+total                         21
+
+Select jobs to execute...
+Execute 4 jobs...
+
+[Mon Apr 29 15:29:50 2024]
+localrule mark_duplicates:
+    input: results/mapped/C86113---1.sorted.bam
+    output: results/mkdup/C86113.bam, results/mkdup/C86113.bai, results/qc/mkdup_metrics/C86113.metrics
+    log: results/logs/mark_duplicates/C86113.log
+    jobid: 24
+    reason: Missing output files: results/mkdup/C86113.bam
+    wildcards: sample=C86113
+    resources: tmpdir=/tmp
+
+[Mon Apr 29 15:29:50 2024]
+localrule mark_duplicates:
+    input: results/mapped/C153862---1.sorted.bam, results/mapped/C153862---2.sorted.bam
+    output: results/mkdup/C153862.bam, results/mkdup/C153862.bai, results/qc/mkdup_metrics/C153862.metrics
+    log: results/logs/mark_duplicates/C153862.log
+    jobid: 15
+    reason: Missing output files: results/mkdup/C153862.bam
+    wildcards: sample=C153862
+    resources: tmpdir=/tmp
+
+[Mon Apr 29 15:29:50 2024]
+localrule mark_duplicates:
+    input: results/mapped/C86114---1.sorted.bam
+    output: results/mkdup/C86114.bam, results/mkdup/C86114.bai, results/qc/mkdup_metrics/C86114.metrics
+    log: results/logs/mark_duplicates/C86114.log
+    jobid: 31
+    reason: Missing output files: results/mkdup/C86114.bam
+    wildcards: sample=C86114
+    resources: tmpdir=/tmp
+
+[Mon Apr 29 15:29:50 2024]
+localrule mark_duplicates:
+    input: results/mapped/C106394---1.sorted.bam, results/mapped/C106394---2.sorted.bam
+    output: results/mkdup/C106394.bam, results/mkdup/C106394.bai, results/qc/mkdup_metrics/C106394.metrics
+    log: results/logs/mark_duplicates/C106394.log
+    jobid: 5
+    reason: Missing output files: results/mkdup/C106394.bam
+    wildcards: sample=C106394
+    resources: tmpdir=/tmp
+
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+Activating conda environment: .snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+RuleException:
+CalledProcessError in file /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/Snakefile2, line 211:
+Command 'source /projects/nomclark@colostate.edu/software/miniforge3/bin/activate '/gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_'; set -euo pipefail;  python /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/scripts/tmpb0_3c77x.wrapper.py' returned non-zero exit status 1.
+[Mon Apr 29 15:30:31 2024]
+Error in rule mark_duplicates:
+    jobid: 5
+    input: results/mapped/C106394---1.sorted.bam, results/mapped/C106394---2.sorted.bam
+    output: results/mkdup/C106394.bam, results/mkdup/C106394.bai, results/qc/mkdup_metrics/C106394.metrics
+    log: results/logs/mark_duplicates/C106394.log (check log file(s) for error details)
+    conda-env: /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+
+RuleException:
+CalledProcessError in file /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/Snakefile2, line 211:
+Command 'source /projects/nomclark@colostate.edu/software/miniforge3/bin/activate '/gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_'; set -euo pipefail;  python /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/scripts/tmp45ejvlgl.wrapper.py' returned non-zero exit status 1.
+[Mon Apr 29 15:30:36 2024]
+Error in rule mark_duplicates:
+    jobid: 31
+    input: results/mapped/C86114---1.sorted.bam
+    output: results/mkdup/C86114.bam, results/mkdup/C86114.bai, results/qc/mkdup_metrics/C86114.metrics
+    log: results/logs/mark_duplicates/C86114.log (check log file(s) for error details)
+    conda-env: /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+
+RuleException:
+CalledProcessError in file /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/Snakefile2, line 211:
+Command 'source /projects/nomclark@colostate.edu/software/miniforge3/bin/activate '/gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_'; set -euo pipefail;  python /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/scripts/tmphme_8myp.wrapper.py' returned non-zero exit status 1.
+[Mon Apr 29 15:30:36 2024]
+Error in rule mark_duplicates:
+    jobid: 24
+    input: results/mapped/C86113---1.sorted.bam
+    output: results/mkdup/C86113.bam, results/mkdup/C86113.bai, results/qc/mkdup_metrics/C86113.metrics
+    log: results/logs/mark_duplicates/C86113.log (check log file(s) for error details)
+    conda-env: /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+
+RuleException:
+CalledProcessError in file /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/Snakefile2, line 211:
+Command 'source /projects/nomclark@colostate.edu/software/miniforge3/bin/activate '/gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_'; set -euo pipefail;  python /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/scripts/tmphr73i4j4.wrapper.py' returned non-zero exit status 1.
+[Mon Apr 29 15:30:39 2024]
+Error in rule mark_duplicates:
+    jobid: 15
+    input: results/mapped/C153862---1.sorted.bam, results/mapped/C153862---2.sorted.bam
+    output: results/mkdup/C153862.bam, results/mkdup/C153862.bai, results/qc/mkdup_metrics/C153862.metrics
+    log: results/logs/mark_duplicates/C153862.log (check log file(s) for error details)
+    conda-env: /gpfs/alpine1/scratch/nomclark@colostate.edu/crct_snake_proj/.snakemake/conda/a0e5a76e016aa3ec2445dc8901a796ba_
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-04-29T152947.623985.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.
