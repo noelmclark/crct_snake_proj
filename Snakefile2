@@ -199,7 +199,7 @@ rule mark_duplicates:
     bams=get_all_bams_of_common_sample
   output:
     bam="results/mkdup/{sample}.bam",
-    bai="results/mkdup/{sample}.bai",
+    #bai="results/mkdup/{sample}.bai",
     metrics="results/qc/mkdup_metrics/{sample}.metrics"
   #conda:
   #  "envs/picard.yaml"
