@@ -201,24 +201,21 @@ rule mark_duplicates:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
     metrics="results/qc/mkdup_metrics/{sample}.metrics"
-  conda:
-    "envs/gatk.yaml"
+  #conda:
+    #"envs/gatk.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
-  #params:
-  #  extra=config["params"]["picard"]["MarkDuplicates"],
-  #wrapper:
-  #  "v3.9.0/bio/picard/markduplicates"
-  shell:
-    " if isinstance({input.bams}, str): \
-    "   BAMS = [{input.bams}] \ "
-    " BAMS = list(map("--INPUT {}".format, BAMS)); "
-#   " BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
-    " gatk MarkDuplicates  "
-    "  --CREATE_INDEX "
-    "  {BAMS} "
-    "  -O {output.bam} "
-    "  -M {output.metrics} > {log} 2>&1 "
+  params:
+    extra=config["params"]["picard"]["MarkDuplicates"],
+  wrapper:
+    "v3.9.0/bio/picard/markduplicates"
+  #shell:
+    #" BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
+    #" gatk MarkDuplicates  "
+    #"  --CREATE_INDEX "
+    #"  {BAMS} "
+    #"  -O {output.bam} "
+    #"  -M {output.metrics} > {log} 2>&1 "
 
 
 
