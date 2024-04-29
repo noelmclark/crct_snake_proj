@@ -196,7 +196,7 @@ rule map_reads:
 
 rule mark_duplicates:
   input:
-    bam=get_all_bams_of_common_sample
+    get_all_bams_of_common_sample
   output:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
@@ -205,14 +205,17 @@ rule mark_duplicates:
     "envs/gatk.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
-  shell:
-    " BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
-    " gatk MarkDuplicates  "
-    "  --CREATE_INDEX "
-    "  eval $BAMS "
-    "  -O {output.bam} "
-    "  -M {output.metrics} > {log} 2>&1 "
-
+  params:
+    extra=config["params"]["picard"]["MarkDuplicates"]
+  wrapper:
+    "v1.1.0/bio/picard/markduplicates"
+#  shell:
+#    " BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
+#    " gatk MarkDuplicates  "
+#    "  --CREATE_INDEX "
+#    "  eval $BAMS "
+#    "  -O {output.bam} "
+#    "  -M {output.metrics} > {log} 2>&1 "
 
 
 
