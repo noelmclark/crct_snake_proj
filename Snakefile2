@@ -72,25 +72,13 @@ def get_read_group(wildcards):
         lane=sample_table.loc[(wildcards.sample, wildcards.unit), "lane"],
     )
 
-# OLDDDD define function to get all the bam files for different units of same sample
-#def get_all_bams_of_common_sample(wildcards):
-#    s=sample_table.loc[(sample_table["sample"] == wildcards.sample)]
-#    return(expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
-#        sample = s["sample"].tolist(),
-#        unit = s["unit"].tolist()
-#    ))
-
-# define function to get all the bam files for different units of same sample
-# also puts -I in front of each file
+#define function to get all the bam files for different units of same sample
 def get_all_bams_of_common_sample(wildcards):
-    s = sample_table.loc[(sample_table["sample"] == wildcards.sample)]
-    bams = expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
-                  sample=s["sample"].tolist(),
-                  unit=s["unit"].tolist())
-
-    # Join the list of BAM file names into a single string with ' ' separator
-    return ' '.join(bams)
-
+    s=sample_table.loc[(sample_table["sample"] == wildcards.sample)]
+    return(expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
+        sample = s["sample"].tolist(),
+        unit = s["unit"].tolist()
+    ))
 
 ### Specify rule "all"
 # By default, Snakemake tries to create the input files needed
