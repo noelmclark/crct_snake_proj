@@ -212,7 +212,7 @@ rule mark_duplicates:
     #" BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
     " gatk MarkDuplicates  "
     "  --CREATE_INDEX "
-    "  {input.bam} "
+    "  -I {input.bam} "
     "  -O {output.bam} "
     "  -M {output.metrics} > {log} 2>&1 "
 
