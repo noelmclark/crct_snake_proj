@@ -72,13 +72,24 @@ def get_read_group(wildcards):
         lane=sample_table.loc[(wildcards.sample, wildcards.unit), "lane"],
     )
 
+# OLDDDD define function to get all the bam files for different units of same sample
+#def get_all_bams_of_common_sample(wildcards):
+#    s=sample_table.loc[(sample_table["sample"] == wildcards.sample)]
+#    return(expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
+#        sample = s["sample"].tolist(),
+#        unit = s["unit"].tolist()
+#    ))
+
 # define function to get all the bam files for different units of same sample
+# also puts -I in front of each file
 def get_all_bams_of_common_sample(wildcards):
-    s=sample_table.loc[(sample_table["sample"] == wildcards.sample)]
-    return(expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
-        sample = s["sample"].tolist(),
-        unit = s["unit"].tolist()
-    ))
+    s = sample_table.loc[(sample_table["sample"] == wildcards.sample)]
+    bams = expand("-I results/mapped/{sample}---{unit}.sorted.bam", zip,
+                  sample=s["sample"].tolist(),
+                  unit=s["unit"].tolist())
+
+    # Join the list of BAM file names into a single string with ' ' separator
+    return ' '.join(bams)
 
 
 ### Specify rule "all"
@@ -196,26 +207,26 @@ rule map_reads:
 
 rule mark_duplicates:
   input:
-    bams=get_all_bams_of_common_sample
+    bam=get_all_bams_of_common_sample,
   output:
     bam="results/mkdup/{sample}.bam",
     bai="results/mkdup/{sample}.bai",
     metrics="results/qc/mkdup_metrics/{sample}.metrics"
-  #conda:
-    #"envs/gatk.yaml"
+  conda:
+    "envs/gatk.yaml"
   log:
     "results/logs/mark_duplicates/{sample}.log"
-  params:
-    extra=config["params"]["picard"]["MarkDuplicates"],
-  wrapper:
-    "v3.9.0/bio/picard/markduplicates"
-  #shell:
+  #params:
+  #  extra=config["params"]["picard"]["MarkDuplicates"],
+  #wrapper:
+  #  "v3.9.0/bio/picard/markduplicates"
+  shell:
     #" BAMS=$(echo {input.bam} | awk '{{for(i=1;i<=NF;i++) printf(\"-I %s \", $i)}}'); "
-    #" gatk MarkDuplicates  "
-    #"  --CREATE_INDEX "
-    #"  {BAMS} "
-    #"  -O {output.bam} "
-    #"  -M {output.metrics} > {log} 2>&1 "
+    " gatk MarkDuplicates  "
+    "  --CREATE_INDEX "
+    "  {input.bam} "
+    "  -O {output.bam} "
+    "  -M {output.metrics} > {log} 2>&1 "
 
 
 
