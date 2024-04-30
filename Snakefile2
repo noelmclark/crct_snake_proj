@@ -84,7 +84,7 @@ def get_read_group(wildcards):
 # also puts -I in front of each file
 def get_all_bams_of_common_sample(wildcards):
     s = sample_table.loc[(sample_table["sample"] == wildcards.sample)]
-    bams = expand("-I results/mapped/{sample}---{unit}.sorted.bam", zip,
+    bams = expand("results/mapped/{sample}---{unit}.sorted.bam", zip,
                   sample=s["sample"].tolist(),
                   unit=s["unit"].tolist())
 
