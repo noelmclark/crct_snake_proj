@@ -205,7 +205,8 @@ rule mark_duplicates:
   log:
     "results/logs/mark_duplicates/{sample}.log"
   resources:
-    mem_mb=4000,
+    mem_mb=112200,
+    threads: 30,
   #params:
   #  extra=config["params"]["picard"]["MarkDuplicates"],
   #wrapper:
