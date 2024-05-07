@@ -517,3 +517,19 @@ rule psmc_plot:
     "results/psmc-plot/{sample}.log"
   shell:
     "psmc_plot.pl -u 8.0e-09 -g 3 {output} {input}"
+
+
+
+
+#rule to calculate avg depth of coverage of bam file using samtools
+rule get_coverage_depth:
+  input:
+    bam="results/mkdup/{sample}.bam"
+  output:
+    "results/qc/coverage/{sample}.txt"
+  conda:
+    "envs/sambcftools.yaml"
+  log:
+    "results/get-coverage-depth/{sample}.log"
+  shell:
+    "samtools depth -a {input.bam} -o {output} 2> {log}"
