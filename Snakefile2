@@ -87,7 +87,7 @@ def get_all_bams_of_common_sample(wildcards):
 rule all:
   input: 
     #"results/vcf-stats/all.vcf.stats",
-    expand("results/psmc-plot/{s}", s=SAMPLES),
+    expand("results/psmc-plot/{s}.eps", s=SAMPLES),
     expand("results/qc/coverage/{s}.txt", s=SAMPLES)
 
 
