@@ -88,6 +88,7 @@ rule all:
   input: 
     #"results/vcf-stats/all.vcf.stats",
     expand("results/psmc-plot/{s}", s=SAMPLES)
+    expand("results/qc/coverage/{s}.txt", s=SAMPLES)
 
 
 
@@ -510,7 +511,7 @@ rule psmc_plot:
   input:
     "results/run-psmc/{sample}.psmc"
   output:
-    "results/psmc-plot/{sample}"
+    "results/psmc-plot/{sample}.eps"
   conda:
     "envs/psmc.yaml"
   log:
