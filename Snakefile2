@@ -533,4 +533,4 @@ rule get_coverage_depth:
   log:
     "results/get-coverage-depth/{sample}.log"
   shell:
-    "samtools depth -a {input.bam} -o {output} 2> {log}"
+    "samtools depth -a -H {input.bam} -o {output} 2> {log}"
