@@ -140,4 +140,24 @@ rule psmc_consensus_sequence:
 ```
 
 ### RESULTS!!
+The rule psmc_plot generated 4 psmc.eps files, one for each sample. I set the generation time `-g` to be 3 years which is standard in the literature for Cutthroat Trout and the mutation rate `-u` to 8.0e-09 based on a [coho salmon PSMC study](https://doi.org/10.1371/journal.pgen.1010918).
+
+```sh
+# rule to plot psmc to visualize result
+# -u [per-generation mutation rate]
+# -g [generation time in years] from https://doi.org/10.1371/journal.pgen.1010918
+rule psmc_plot:
+  input:
+    "results/run-psmc/{sample}.psmc"
+  output:
+    "results/psmc-plot/{sample}.eps"
+  conda:
+    "envs/psmc.yaml"
+  log:
+    "results/psmc-plot/{sample}.log"
+  shell:
+    "psmc_plot.pl -u 8.0e-09 -g 3 {output} {input}"
+```
+I took these 4 .eps files into Inkscape to change the colors and make them all fit to the same axes and here is the resulting plot!
+
 ![](README_files/all4_psmc.html)<!-- -->
