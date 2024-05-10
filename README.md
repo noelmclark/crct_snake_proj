@@ -160,4 +160,10 @@ rule psmc_plot:
 ```
 I took these 4 .eps files into Inkscape to change the colors and make them all fit to the same axes and here is the resulting plot!
 
+Legend
+- blue - C86113 - Lake Nanita (blue lineage)
+- blue - C86114 - Lake Nanita (blue lineage)
+- light green - C106394 - South Hayden Creek (East slope green lineage)
+- dark green - C153862 - Hunter Creek (West slope green lineage)
+
 ![](README_files/all4_psmc.svg)<!-- -->
