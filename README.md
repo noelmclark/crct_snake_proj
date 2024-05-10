@@ -160,4 +160,4 @@ rule psmc_plot:
 ```
 I took these 4 .eps files into Inkscape to change the colors and make them all fit to the same axes and here is the resulting plot!
 
-![](README_files/all4_psmc.html)<!-- -->
+![](README_files/all4_psmc.svg)<!-- -->
