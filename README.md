@@ -2,6 +2,19 @@ BZ562: Computational Approaches in Molecular Ecology Final Project
 ==============
 ## Running the Pariwise Sequentially Markovian Coalescent [(PSMC)](https://github.com/lh3/psmc) on Colorado River Cutthroat Trout (Oncorhynchus clarkii pleuriticus, CRCT) samples. 
 
+- [The Snakeflow](#the-snakeflow)
+- [Important files](#important-files)
+    - [`sample-info.tsv`](#sample-infotsv)
+    - [`config.yaml`](#configyaml)
+    - [`Snakefile2`](#snakefile2)
+    - [`envs/`](#envs)
+    - [`results/`](#results)
+- [Major Challenges](#major-challenges)
+    - [multiple R1/R2 files per sample](#multiple-r1r2-files-per-sample)
+    - [rule mark_duplicates](#rule-mark_duplicates)
+    - [Getting PSMC set up](#getting-psmc-set-up)
+- [RESULTS!!](#results-1)
+
 ## The Snakeflow 
 This is a simple Snakemake workflow adapted from Dr. Eric Anderson's [mega-non-model-wgs-snakeflow](https://github.com/eriqande/mega-non-model-wgs-snakeflow).
 
@@ -9,33 +22,33 @@ I processed 4 CRCT samples through this snakeflow for the purpose of the class p
 
 ## Important files
 
-### `sample-info.tsv`
+#### `sample-info.tsv`
 
 The 4 samples and their associated read group information can be found in the [sample-info.tsv](https://github.com/noelmclark/crct_snake_proj/blob/main/sample-info.tsv) file. 
 
-### `config.yaml`
+#### `config.yaml`
 
 The [config.yaml](https://github.com/noelmclark/crct_snake_proj/blob/main/config.yaml) file contains paths to where my reference fasta and sample-info.tsv are located, as well as a list of all the chormosomes I want to use for future processing, however chromosomes are not needed for the snakeflow to run through the PSMC plot step as I have it right now. 
 
 It also contains the parameters for many of the rules in my Snakefile. 
 
-### `Snakefile2`
+#### `Snakefile2`
 
 Right now, [Snakefile2](https://github.com/noelmclark/crct_snake_proj/blob/main/Snakefile2) should be used over the older [Snakefile](https://github.com/noelmclark/crct_snake_proj/blob/main/Snakefile). Eventually, I want to separate out the rules into their own files and have the Snakefile include just the paths to the necessary rules as recommended for maximum reproducibility by Snakemake documentation. 
 
-### `envs/`
+#### `envs/`
 
 This folder contains all of the `.yaml` files for specifying the conda environments including packages and dependencies needed for each rule. 
 
-### `results/`
+#### `results/`
 
 This folder includes the PSMC plots that were the ultimate output of the Snakeflow for now... hurrah!!!
 
 
-### Major Challenges
+## Major Challenges
 Here is a copy of my stream of consciousness lab notebook for this project, housed through [Google CoLab](https://colab.research.google.com/drive/1Y0s0Jg9Yp0PwF8AWMJVCd9wf3dBD61Lb#scrollTo=gh-sKP1V9L3a). 
 
-#### multiple R1/R2 files per sample
+### multiple R1/R2 files per sample
 
 This required adding a unit column to the `sample-info.tsv` file and then using that to identify unique units of different samples until the rule mark_duplicates (GATK MarkDuplicates) stage when you merge them all together. I added the the following code to create a funciton (called get_all_bams_of_common_sample) that creates a list of all the bam files of the same sample (copied from [`common.smk`](https://github.com/eriqande/mega-non-model-wgs-snakeflow/blob/main/workflow/rules/common.smk) file in Eric's [mega-non-model-wgs-snakeflow](https://github.com/eriqande/mega-non-model-wgs-snakeflow).)
 
@@ -58,7 +71,7 @@ def get_fastq(wildcards):
         return {"r1": fastqs.fq1, "r2": fastqs.fq2}
     return {"r1": fastqs.fq1}
 ```
-#### rule mark_duplicates
+### rule mark_duplicates
 
 At first, the rule mark_duplicates kept failing for the samples with multiple units because the expand rule didn't place commas between file names so it threw a positional error. I played around with the Snakemake wrapper funciton but I had errors with that related to a shell script imbedded in the wrapper so I couldn't really troubleshoot it... 
 
@@ -94,7 +107,7 @@ rule mark_duplicates:
     "  -M {output.metrics} > {log} 2>&1 "
 ```
 
-#### Getting PSMC set up
+### Getting PSMC set up
 
 PSMC was shockingly easy to set up following the [GitHub documentation](https://github.com/lh3/psmc) for the program. The only error was that the documentation is old and since then the mpileup tool for generating a consensus sequence from a bam file had changed from samtools to bcftoools. Here is the error I got from running it the way the recommend on the PSMC GitHub.
 
@@ -125,3 +138,5 @@ rule psmc_consensus_sequence:
     "bcftools mpileup -C50 -f {input.ref} {input.bam} | bcftools call -c - | " 
     "vcfutils.pl vcf2fq -d 6 -D 36 | gzip > {output} 2> {log}"
 ```
+
+### RESULTS!!
