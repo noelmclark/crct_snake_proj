@@ -140,3 +140,4 @@ rule psmc_consensus_sequence:
 ```
 
 ### RESULTS!!
+![](README_files/all4_psmc.html)<!-- -->
